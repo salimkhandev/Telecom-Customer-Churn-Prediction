@@ -94,3 +94,13 @@ TELECOM CHURN PREDICTION - DEVELOPMENT NOTES
     
     D. Data Transformation
     - Log(TotalCharges): Applied np.log1p() to TotalCharges to compress extreme values, normalizing the right-skewed financial distribution for linear/SVM models.
+
+14. MODEL DEPLOYMENT & UI INTERFACE:
+    To prove real-world applicability, the final XGBoost model was deployed via a 
+    Streamlit web application. This abstracts the complexity of the Python backend 
+    and provides a user-friendly dashboard for non-technical stakeholders (e.g., 
+    Marketing/Retention teams) to input a customer profile and instantly receive:
+    - An exact Churn Probability score (via an interactive gauge chart)
+    - A categorized Risk Level (High/Medium/Low)
+    - Actionable retention advice based on the risk tier.
+    This demonstrates the full lifecycle from raw data processing to an end-user product.
