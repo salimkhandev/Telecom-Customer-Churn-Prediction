@@ -72,3 +72,25 @@ TELECOM CHURN PREDICTION - DEVELOPMENT NOTES
     Conclusion: Data engineering choices (SMOTE vs SMOTEENN) had a significantly larger
     impact on the F1/Accuracy ceiling than the choice of algorithm. F1 score jumped
     from 0.759 to 0.777 simply by reverting the resampler strategy.
+
+13. FEATURE ENGINEERING SUMMARY (For Thesis Reference):
+    To improve model accuracy beyond raw data, we engineered 9 business-logic features 
+    and applied 1 mathematical transformation:
+    
+    A. Financial & Tenure Ratios
+    - charges_per_tenure: (MonthlyCharges / tenure+1). Measures financial burden relative to loyalty.
+    - high_monthly_charges: Flag (1/0) if bill is > dataset median ($70.35). Identifies expensive accounts.
+    - tenure_contract_ratio: (tenure / contract_length_months). Identifies customers who have stayed much longer than their contract requires.
+    
+    B. Service Usage & Vulnerability
+    - total_services: Count (0-6) of add-ons (Security, Backup, TV, etc). More services = "stickier" customer.
+    - is_senior_no_support: Flag (1/0) if Senior Citizen with no Tech Support. Highly vulnerable segment likely to churn from tech frustration.
+    - no_sticky_services: Flag (1/0) if no Security, Backup, or Device Protection. Identifies raw internet users with no ecosystem ties.
+    
+    C. High-Risk Red Flags
+    - long_tenure_churner: Flag (1/0) if tenure >24 months but still on Month-to-Month. Loyal but non-committal flight risks.
+    - high_pay_no_support: Flag (1/0) if high_monthly_charges = 1 but no Tech Support. High-value customers getting no technical help.
+    - risky_payment: Flag (1/0) if paying via Electronic Check. Historically the highest churn-rate payment method.
+    
+    D. Data Transformation
+    - Log(TotalCharges): Applied np.log1p() to TotalCharges to compress extreme values, normalizing the right-skewed financial distribution for linear/SVM models.
