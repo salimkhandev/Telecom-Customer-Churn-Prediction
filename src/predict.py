@@ -1,9 +1,7 @@
 import joblib
 import pandas as pd
 import numpy as np
-import tensorflow as tf
 import os
-
 def predict_single_customer(customer_dict):
     # Load comparison results to find the best model
     df_results = pd.read_csv('results/comparison_results.csv')
@@ -11,6 +9,7 @@ def predict_single_customer(customer_dict):
     print(f"Loading Best Model: {best_model_name}")
     
     if best_model_name == 'ANN':
+        import tensorflow as tf
         model = tf.keras.models.load_model('saved_models/ANN.keras')
     else:
         model = joblib.load(f'saved_models/{best_model_name}.pkl')

@@ -5,7 +5,6 @@ imbalanced-learn
 xgboost
 lightgbm
 catboost
-tensorflow
 optuna
 matplotlib
 seaborn
