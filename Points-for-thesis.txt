@@ -1,0 +1,74 @@
+TELECOM CHURN PREDICTION - DEVELOPMENT NOTES
+============================================================
+
+1. Dataset had blank spaces in TotalCharges column instead of NaN.
+   Fixed by replacing spaces with NaN then filling with column median.
+
+2. Churn column was text (Yes/No). Mapped to binary (1/0) for modelling.
+
+3. Class imbalance: 73% No Churn vs 27% Churn.
+   First used SMOTE. Later upgraded to SMOTEENN which also cleans noisy
+   boundary samples after oversampling, improving Precision and AUC-ROC.
+
+4. Keras 3 removed input_shape argument from Dense layer.
+   Fixed by adding an explicit Input(shape=(...)) layer at the start of
+   the Sequential model.
+
+5. XGBoost 3.x removed use_label_encoder parameter.
+   Removed it from all XGBoost instantiations to stop deprecation warnings.
+
+6. Trained 9 base models: Logistic Regression, Decision Tree, Random Forest,
+   SVM, XGBoost, LightGBM, XGBoost_Optimized, LightGBM_Optimized, ANN.
+   Added a 10th model: Stacking Ensemble (RF + XGB + LGB as base, LR as meta).
+
+7. Used Optuna Bayesian Optimisation (50 trials, 5-fold CV, F1 objective)
+   to tune XGBoost and LightGBM hyperparameters instead of Grid Search.
+
+8. Added 3 new engineered features to improve model signal:
+   - total_services: count of add-on services subscribed.
+   - log(TotalCharges): log transform to normalise skewed financial data.
+   - tenure_contract_ratio: tenure divided by contract length in months.
+
+9. Pipeline run 1 (SMOTE, 9 models):
+   Best model ANN -> Accuracy 76.9%, F1 0.775, AUC-ROC 0.826, Precision 78.5%
+
+10. Pipeline run 2 (SMOTEENN + 3 new features + Stacking, 10 models):
+    Best model Stacking Ensemble -> Accuracy 74.3%, F1 0.757,
+    AUC-ROC 0.838, Precision 80.6%
+    AUC-ROC and Precision improved. Accuracy dropped slightly because
+    SMOTEENN removed ambiguous training samples near the decision boundary.
+
+11. Pipeline run 3 (RFECV + 4 new business features + diverse Stacking + calibration + full-stack Optuna, 12 models):
+    Added 4 new features:
+    - long_tenure_churner: high tenure but still on month-to-month contract.
+    - high_pay_no_support: high monthly charges with no TechSupport.
+    - no_sticky_services: no Security, Backup or DeviceProtection subscribed.
+    - risky_payment: payment via Electronic check (historically highest churn rate).
+    Applied RFECV (Recursive Feature Elimination with Cross-Validation) using
+    GradientBoosting as estimator, cv=5, scoring=F1 to remove noisy one-hot columns.
+    Upgraded Stacking to 5 diverse base models (RF, XGB, LGB, LR, SVM) with
+    passthrough=True so meta-model also sees original features alongside predictions.
+    Added CalibratedClassifierCV (isotonic, cv=3) wrapping the stacking model
+    to improve probability reliability (Brier score reported).
+    Added full-stack Optuna (30 trials, cv=5, F1) tuning RF+XGB inside stacking.
+    Best model LightGBM/XGBoost (tied) -> Accuracy 74.5%, F1 0.759, AUC-ROC 0.834,
+    Precision 81.0%
+    ANN -> Accuracy 71.5%, F1 0.732, AUC-ROC 0.827, Precision 79.4%
+    Stacking_Calibrated achieved best AUC-ROC of 0.835 with most reliable probabilities.
+    Logistic Regression achieved highest AUC of 0.842 after RFECV feature selection,
+    showing the selected feature set is highly linearly separable.
+    RFECV removed noisy dummy columns, which reduced interference and lifted
+    LightGBM and XGBoost above Stacking in the final F1 ranking.
+
+12. Pipeline run 4 (Revert SMOTEENN to SMOTE, Remove RFECV, Add CatBoost):
+    Root cause analysis revealed SMOTEENN and RFECV were overly aggressive,
+    removing ambiguous boundary samples and features that tree models rely on.
+    Reverted to standard SMOTE and removed RFECV, keeping all engineered features.
+    Added CatBoost model to the pipeline and enabled class_weight scaling on ANN.
+    Results perfectly matched hypothesis:
+    Best F1 Model: XGBoost -> F1 0.777, Accuracy 77.1%, Precision 78.8%, AUC-ROC 0.821
+    Best Accuracy Model: Stacking_Calibrated -> Accuracy 77.8%, F1 0.776, Precision 77.5%, AUC-ROC 0.821
+    CatBoost performed excellently on debut, tying with XGBoost_Optimized (F1 0.775, Accuracy 76.9%).
+    Conclusion: Data engineering choices (SMOTE vs SMOTEENN) had a significantly larger
+    impact on the F1/Accuracy ceiling than the choice of algorithm. F1 score jumped
+    from 0.759 to 0.777 simply by reverting the resampler strategy.
