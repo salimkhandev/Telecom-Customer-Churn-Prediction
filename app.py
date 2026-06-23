@@ -39,11 +39,10 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
 /* Result cards */
 .result-card {
-    background: rgba(255,255,255,0.07);
-    backdrop-filter: blur(12px);
+    background: transparent;
     border-radius: 16px;
     padding: 28px;
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid rgba(128,128,128,0.2);
     text-align: center;
 }
 .result-card-high  { border-top: 4px solid #ef4444; }
@@ -82,13 +81,10 @@ div.stButton > button:hover {
 }
 
 /* Input fields */
-[data-testid="stSelectbox"], [data-testid="stNumberInput"] {
-    background: rgba(255,255,255,0.05) !important;
-    border-radius: 8px;
-}
+/* Removed overrides to use native Streamlit styling */
 
 /* Divider */
-hr { border-color: rgba(255,255,255,0.1); }
+hr { border-color: rgba(128,128,128,0.2); }
 
 /* Title */
 .hero-title {
@@ -97,7 +93,7 @@ hr { border-color: rgba(255,255,255,0.1); }
     margin-bottom: 4px;
 }
 .hero-sub {
-    color: rgba(255,255,255,0.5);
+    color: #666666;
     font-size: 0.95rem;
     margin-bottom: 28px;
 }
