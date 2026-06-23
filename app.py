@@ -227,10 +227,10 @@ if submitted:
             value=round(prob * 100, 1),
             number={'suffix': '%', 'font': {'size': 44, 'color': color}},
             gauge={
-                'axis': {'range': [0, 100], 'tickcolor': 'rgba(255,255,255,0.3)'},
+                'axis': {'range': [0, 100], 'tickcolor': 'gray'},
                 'bar': {'color': color, 'thickness': 0.25},
                 'bgcolor': 'rgba(0,0,0,0)',
-                'bordercolor': 'rgba(255,255,255,0.1)',
+                'bordercolor': 'gray',
                 'steps': [
                     {'range': [0, 30],  'color': 'rgba(16,185,129,0.15)'},
                     {'range': [30, 60], 'color': 'rgba(245,158,11,0.15)'},
@@ -242,12 +242,11 @@ if submitted:
                     'value': prob * 100
                 }
             },
-            title={'text': "Churn Probability", 'font': {'color': 'rgba(255,255,255,0.7)', 'size': 16}}
+            title={'text': "Churn Probability", 'font': {'size': 16}}
         ))
         fig.update_layout(
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
-            font_color='white',
             height=300,
             margin=dict(t=60, b=20, l=30, r=30)
         )
@@ -265,9 +264,9 @@ if submitted:
         <div class="result-card {card_class[risk]}">
             <div style="font-size:2.8rem; margin-bottom:8px">{'🔴' if risk=='High' else '🟡' if risk=='Medium' else '🟢'}</div>
             <div style="font-size:1.5rem; font-weight:700; color:{color}; margin-bottom:8px">{risk} Risk</div>
-            <div style="font-size:1.1rem; color:rgba(255,255,255,0.85); margin-bottom:16px">{verdict}</div>
+            <div style="font-size:1.1rem; color:#444444; margin-bottom:16px">{verdict}</div>
             <span class="metric-chip {chip_class[risk]}">Churn Probability: {prob*100:.1f}%</span>
-            <hr style="border-color:rgba(255,255,255,0.1); margin:16px 0">
-            <div style="color:rgba(255,255,255,0.6); font-size:0.85rem; line-height:1.6">{advice_map[risk]}</div>
+            <hr style="border-color:rgba(128,128,128,0.2); margin:16px 0">
+            <div style="color:#666666; font-size:0.85rem; line-height:1.6">{advice_map[risk]}</div>
         </div>
         """, unsafe_allow_html=True)
