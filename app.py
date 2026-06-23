@@ -264,9 +264,9 @@ if submitted:
         <div class="result-card {card_class[risk]}">
             <div style="font-size:2.8rem; margin-bottom:8px">{'🔴' if risk=='High' else '🟡' if risk=='Medium' else '🟢'}</div>
             <div style="font-size:1.5rem; font-weight:700; color:{color}; margin-bottom:8px">{risk} Risk</div>
-            <div style="font-size:1.1rem; color:#444444; margin-bottom:16px">{verdict}</div>
+            <div style="font-size:1.1rem; color:inherit; margin-bottom:16px">{verdict}</div>
             <span class="metric-chip {chip_class[risk]}">Churn Probability: {prob*100:.1f}%</span>
-            <hr style="border-color:rgba(128,128,128,0.2); margin:16px 0">
-            <div style="color:#666666; font-size:0.85rem; line-height:1.6">{advice_map[risk]}</div>
+            <hr style="border-color:rgba(128,128,128,0.3); margin:16px 0">
+            <div style="color:inherit; opacity:0.75; font-size:0.85rem; line-height:1.6">{advice_map[risk]}</div>
         </div>
         """, unsafe_allow_html=True)
