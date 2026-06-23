@@ -28,7 +28,7 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 /* Section headers */
 .section-header {
     background: rgba(0,0,0,0.03);
-    border-left: 4px solid #000000;
+    border-left: 4px solid var(--text-color);
     padding: 10px 16px;
     border-radius: 0 8px 8px 0;
     margin: 20px 0 12px 0;
@@ -107,7 +107,7 @@ with st.sidebar:
     st.markdown("## 📡 Churn Predictor")
     st.markdown("---")
     st.markdown("""
-    <div style='color:#666666; font-size:0.85rem; line-height:1.7'>
+    <div style='color:var(--text-color); opacity:0.8; font-size:0.85rem; line-height:1.7'>
     This tool uses an <b style='color:#a78bfa'>XGBoost</b> model trained on the IBM Telco Customer Churn dataset to predict whether a customer is likely to cancel their service.<br><br>
     The model was trained on <b style='color:#a78bfa'>7,043 customers</b> and achieves:<br>
     • Accuracy: <b style='color:#34d399'>77.1%</b><br>
@@ -117,7 +117,7 @@ with st.sidebar:
     """, unsafe_allow_html=True)
     st.markdown("---")
     st.markdown("""
-    <div style='color:#888888; font-size:0.75rem'>
+    <div style='color:var(--text-color); opacity:0.6; font-size:0.75rem'>
     FYP — Islamia College University Peshawar<br>
     Dept. of Computer Science
     </div>
