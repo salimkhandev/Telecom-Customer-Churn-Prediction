@@ -61,7 +61,7 @@ def predict_single_customer(customer_dict):
                         'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies',
                         'Contract', 'PaymentMethod']
     
-    df = pd.get_dummies(df, columns=[c for c in multi_class_cols if c in df.columns], drop_first=True)
+    df = pd.get_dummies(df, columns=[c for c in multi_class_cols if c in df.columns], drop_first=False)
     
     # Align columns to what the model expects
     df = df.reindex(columns=feature_names, fill_value=0)
