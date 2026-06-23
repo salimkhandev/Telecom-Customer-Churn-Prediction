@@ -1,13 +1,7 @@
 pandas
 numpy
 scikit-learn
-imbalanced-learn
 xgboost
-lightgbm
-catboost
-optuna
-matplotlib
-seaborn
 joblib
 streamlit
 plotly
