@@ -251,7 +251,10 @@ if submitted:
             height=300,
             margin=dict(t=60, b=20, l=30, r=30)
         )
-        st.plotly_chart(fig, use_container_width=True)
+        try:
+            st.plotly_chart(fig, width='stretch')
+        except TypeError:
+            st.plotly_chart(fig, use_container_width=True)
 
     # Right: verdict card
     with col2:
